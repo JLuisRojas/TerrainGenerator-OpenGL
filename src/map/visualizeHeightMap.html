@@ -1,0 +1,54 @@
+<html>
+<head>
+  <title> Demonstration of two-dimensional value noise </title>
+<script src="rawNoise.js"></script>
+<script>
+  var ValueNoise = {
+    noise: { raw: rawNoise }
+  };
+  ValueNoise.load = function () {
+    var g = ValueNoise,
+        raw = g.noise.raw,
+        numR = g.numR = raw.length,
+        numC = g.numC = raw[0].length,
+        minValue = raw[0][0],
+        maxValue = minValue;
+    for (var r = 0; r < numR; ++r) {
+      for (var c = 0; c < numC; ++c) {
+        maxValue = Math.max(maxValue, raw[r][c]);
+        minValue = Math.min(minValue, raw[r][c]);
+      }
+    }
+    var valueSpread = maxValue - minValue;
+    console.log(minValue, maxValue, valueSpread);
+    var container = document.getElementById('display'),
+        canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        imageData = context.createImageData(numC, numR),
+        data = imageData.data;
+    for (var r = 0; r < numR; ++r) {
+      for (var c = 0; c < numC; ++c) {
+        var value = raw[r][c],
+            scaled = Math.round(255 * (value - minValue) / valueSpread),
+            pos = r*4*numC + 4*c;
+        data[pos] = data[pos+1] = data[pos+2] = scaled;
+        data[pos+3] = 255;
+      }
+    }
+    console.log(imageData);
+    canvas.width = numC;
+    canvas.height = numR;
+    container.appendChild(canvas);
+    context.putImageData(imageData, 0, 0);
+  };
+  window.onload = ValueNoise.load;
+</script>
+</head>
+<body>
+<div id="wrapper">
+
+<div id="display"></div>
+
+</div><!--end wrapper -->
+</body>
+</html>
