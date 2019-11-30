@@ -2,8 +2,6 @@
 
 <img src="assets/demo4.gif">
 
-Procedural terrain generation using Perlin noise, using OpenGL and GLUT
-
 ## Implementation
 Details about the implementation can be found [here.](docs/design_document.pdf) We are using Perlin noise to generate the height map, from which we then generate the terrain mesh.
 
